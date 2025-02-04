@@ -80,39 +80,39 @@ const buildingType = [
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="name">
           <div class="font-bold">NOMBRE</div>
-          <FormInput v-model="form.name" type="text" id="name"></FormInput>
+          <FormInput v-model="form.name" type="text" id="name" name="name"></FormInput>
         </label>
 
         <label for="surname">
           <div class="font-bold">APELLIDOS</div>
-          <FormInput v-model="form.surname" type="text" id="name"></FormInput>
+          <FormInput v-model="form.surname" type="text" id="surname" name="surname"></FormInput>
         </label>
 
         <label for="user">
           <div class="font-bold">USER</div>
-          <FormInput v-model="form.user" type="text" id="name"></FormInput>
+          <FormInput v-model="form.user" type="text" id="user" name="user"></FormInput>
         </label>
 
         <label for="mail">
           <div class="font-bold">EMAIL</div>
-          <FormInput v-model="form.email" type="text" id="name"></FormInput>
+          <FormInput v-model="form.email" type="text" id="mail" name="mail"></FormInput>
         </label>
 
         <label for="password">
           <div class="font-bold">CONTRASEÑA</div>
-          <FormInput v-model="form.password" type="text" id="name"></FormInput>
+          <FormInput v-model="form.password" type="text" id="password" name="password"></FormInput>
         </label>
 
         <label for="birthday">
           <div class="font-bold">FECHA DE NACIMIENTO</div>
-          <FormInput v-model="form.birthday" type="date" id="name" class="w-full text-center"></FormInput>
+          <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" class="w-full text-center"></FormInput>
         </label>
       </div>
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="street">
           <div class="font-bold">CALLE</div>
-          <FormInput v-model="form.street" type="text" id="name"></FormInput>
+          <FormInput v-model="form.street" type="text" id="street" name="street"></FormInput>
         </label>
 
         <label for="building type">
@@ -123,22 +123,22 @@ const buildingType = [
 
         <label for="door-number">
           <div class="font-bold">Nº PUERTA</div>
-          <FormInput v-model="form.doorNumber" type="text" id="name"></FormInput>
+          <FormInput v-model="form.doorNumber" type="text" id="door-number" name="door-number"></FormInput>
         </label>
 
         <label for="postalcode">
           <div class="font-bold">CÓDIGO POSTAL</div>
-          <FormInput v-model="form.postalCode" type="text" id="name"></FormInput>
+          <FormInput v-model="form.postalCode" type="text" id="postalcode" name="postalcode"></FormInput>
         </label>
 
         <label for="province">
           <div class="font-bold">PROVINCIA</div>
-          <FormInput v-model="form.province" type="text" id="name"></FormInput>
+          <FormInput v-model="form.province" type="text" id="province" name="province"></FormInput>
         </label>
 
         <label for="country">
           <div class="font-bold">PAÍS</div>
-          <FormInput v-model="form.country" type="text" id="name"></FormInput>
+          <FormInput v-model="form.country" type="text" id="country" name="country"></FormInput>
         </label>
       </div>
 
@@ -147,7 +147,7 @@ const buildingType = [
       <div>
         <label for="study-level">
           <div class="font-bold">NIVEL DE ESTUDIO</div>
-          <FormSelect v-model="form.studyLevel" id="study-level" class="text-center" :options="studyLevel"/>
+          <FormSelect v-model="form.studyLevel" id="study-level" name="study-level" class="text-center" :options="studyLevel"/>
         </label>
       </div>
 
@@ -158,7 +158,7 @@ const buildingType = [
           <p>¿Le ha sido útil nuestro formulario? Háganoslo saber...</p>
       </div>
       <br>
-      <textarea v-model="form.comment" id="comment" placeholder="Escriba aquí..." class="bg-white/30 backdrop-blur-lg rounded-lg text-center w-full"></textarea>
+      <textarea v-model="form.comment" id="comment" name="comment" placeholder="Escriba aquí..." class="bg-white/30 backdrop-blur-lg rounded-lg text-center w-full"></textarea>
       </label>
 
       <br>
@@ -174,7 +174,7 @@ const buildingType = [
 
       <div>
         <p class="font-bold">¿Desea recibir información, cursos y ofertas mediante correo?</p>
-        <input type="checkbox" v-model="form.subscribe"> De acuerdo
+        <input type="checkbox" v-model="form.subscribe" name="susbcribe"> De acuerdo
       </div>
 
       <br>
@@ -184,6 +184,5 @@ const buildingType = [
         <ButtonInput type="reset" class="rounded-e-lg hover:bg-red-900">LIMPIAR</ButtonInput>
       </div>
     </form>
-    <pre>{{ form }}</pre>
   </div>
 </template>
