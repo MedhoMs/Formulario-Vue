@@ -50,6 +50,13 @@ const resetForm = () => {
   };
 };
 
+const activeCheckbox = ref (false)
+
+const sections = ref({
+  current: "personalInfo"
+})
+
+
 const captchaValidation = () => {
   const captchaNumber1 = ref(5);
   const captchaNumber2 = ref(3);
@@ -123,7 +130,8 @@ const buildingType = [
 <template>
   <div class="grid place-items-center dark:text-white bg-gradient-to-b from-black via-[#2f005e] to-black my-7">
     <form @submit="submitValidation" autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <div v-if="sections.current === 'personalInfo'">
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="name">
           <div class="font-bold">NOMBRE</div>
           <FormInput v-model="form.name" type="text" id="name" name="name" required></FormInput>
@@ -141,23 +149,26 @@ const buildingType = [
 
         <label for="mail">
           <div class="font-bold">EMAIL</div>
-          <FormInput v-model="form.email" type="text" id="mail" name="mail" required></FormInput>
+          <FormInput v-model="form.email" type="email" id="mail" name="mail" required></FormInput>
         </label>
 
         <label for="password">
           <div class="font-bold">CONTRASEÑA</div>
-          <FormInput v-model="form.password" type="text" id="password" name="password" required></FormInput>
+          <FormInput v-model="form.password" type="password" id="password" name="password" required></FormInput>
         </label>
 
         <label for="birthday">
           <div class="font-bold">FECHA DE NACIMIENTO</div>
-          <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" required class="w-full text-center"></FormInput>
+          <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" class="w-full text-center"></FormInput>
         </label>
+
+        
+      </div>
+        <ButtonInput :disabled = "!(form.name && form.surname && form.user && form.email && form.password)" @click="sections.current = 'address'" class="rounded-xl w-full">Siguiente</ButtonInput>
       </div>
 
-      <br><br>
 
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="sections.current === 'address'">
         <label for="street">
           <div class="font-bold">CALLE</div>
           <FormInput v-model="form.street" type="text" id="street" name="street" required></FormInput>
