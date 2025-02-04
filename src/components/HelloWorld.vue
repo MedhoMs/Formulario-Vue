@@ -105,7 +105,7 @@ const buildingType = [
 
         <label for="birthday">
           <div class="font-bold">FECHA DE NACIMIENTO</div>
-          <FormInput v-model="form.birthday" type="date" id="name"></FormInput>
+          <FormInput v-model="form.birthday" type="date" id="name" class="w-full text-center"></FormInput>
         </label>
       </div>
 
@@ -147,7 +147,7 @@ const buildingType = [
       <div>
         <label for="study-level">
           <div class="font-bold">NIVEL DE ESTUDIO</div>
-          <FormSelect v-model="form.studyLevel" id="study-level" :options="studyLevel"/>
+          <FormSelect v-model="form.studyLevel" id="study-level" class="text-center" :options="studyLevel"/>
         </label>
       </div>
 
