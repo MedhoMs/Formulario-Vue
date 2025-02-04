@@ -1,0 +1,18 @@
+<script setup>
+const model = defineModel()
+
+defineProps ({
+    options: {
+        type:Array,
+        required: true
+    }
+    
+    
+})
+
+</script>
+<template>
+    <select v-model="model" class="bg-white/30 backdrop-blur-lg rounded-lg p-1">
+        <option v-for="option in options" :value="option.value" :key="option.value" class="text-black">{{ option.text }}</option>
+    </select>
+</template>
