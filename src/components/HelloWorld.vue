@@ -20,13 +20,14 @@ const form = ref({
   province: "",
   country: "",
   studyLevel: "",
-  gender: "",
+  gender: false,
   subscribe: false,
+  captcha: false,
   comment: "",
   button: ""
 });
 
-const resetForm = () =>{
+const resetForm = () => {
   form.value= {
     name: "",
     surname: "",
@@ -41,11 +42,34 @@ const resetForm = () =>{
     province: "",
     country: "",
     studyLevel: "",
-    gender: "",
+    gender: false,
     subscribe: false,
+    captcha: false,
     comment: "",
     button: ""
   };
+};
+
+const captchaValidation = () => {
+  const captchaNumber1 = ref(5);
+  const captchaNumber2 = ref(3);
+
+  const userSum = parseInt(prompt(`Tengo mis sospechas... ¿Cuánto es ${captchaNumber1.value} + ${captchaNumber2.value}?`));
+
+  if (userSum === captchaNumber1.value + captchaNumber2.value) {
+    form.value.captcha = true
+  } else {
+    form.value.captcha = false;
+    alert("Validación fallida, vuelva a intentar.")
+  }
+    
+}
+
+const submitValidation = (event) => {
+  if (!form.value.captcha) { 
+    event.preventDefault(); 
+    alert("Debes validar que no eres un robot antes de enviar el formulario.");
+  }
 };
 
 const studyLevel = [
@@ -98,43 +122,45 @@ const buildingType = [
 
 <template>
   <div class="grid place-items-center dark:text-white bg-gradient-to-b from-black via-[#2f005e] to-black my-7">
-    <form autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
+    <form @submit="submitValidation" autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="name">
           <div class="font-bold">NOMBRE</div>
-          <FormInput v-model="form.name" type="text" id="name" name="name"></FormInput>
+          <FormInput v-model="form.name" type="text" id="name" name="name" required></FormInput>
         </label>
 
         <label for="surname">
           <div class="font-bold">APELLIDOS</div>
-          <FormInput v-model="form.surname" type="text" id="surname" name="surname"></FormInput>
+          <FormInput v-model="form.surname" type="text" id="surname" name="surname" required></FormInput>
         </label>
 
         <label for="user">
           <div class="font-bold">USER</div>
-          <FormInput v-model="form.user" type="text" id="user" name="user"></FormInput>
+          <FormInput v-model="form.user" type="text" id="user" name="user" required></FormInput>
         </label>
 
         <label for="mail">
           <div class="font-bold">EMAIL</div>
-          <FormInput v-model="form.email" type="text" id="mail" name="mail"></FormInput>
+          <FormInput v-model="form.email" type="text" id="mail" name="mail" required></FormInput>
         </label>
 
         <label for="password">
           <div class="font-bold">CONTRASEÑA</div>
-          <FormInput v-model="form.password" type="text" id="password" name="password"></FormInput>
+          <FormInput v-model="form.password" type="text" id="password" name="password" required></FormInput>
         </label>
 
         <label for="birthday">
           <div class="font-bold">FECHA DE NACIMIENTO</div>
-          <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" class="w-full text-center"></FormInput>
+          <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" required class="w-full text-center"></FormInput>
         </label>
       </div>
+
+      <br><br>
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="street">
           <div class="font-bold">CALLE</div>
-          <FormInput v-model="form.street" type="text" id="street" name="street"></FormInput>
+          <FormInput v-model="form.street" type="text" id="street" name="street" required></FormInput>
         </label>
 
         <label for="building type">
@@ -145,22 +171,22 @@ const buildingType = [
 
         <label for="door-number">
           <div class="font-bold">Nº PUERTA</div>
-          <FormInput v-model="form.doorNumber" type="text" id="door-number" name="door-number"></FormInput>
+          <FormInput v-model="form.doorNumber" type="number" id="door-number" name="door-number" required></FormInput>
         </label>
 
         <label for="postalcode">
           <div class="font-bold">CÓDIGO POSTAL</div>
-          <FormInput v-model="form.postalCode" type="text" id="postalcode" name="postalcode"></FormInput>
+          <FormInput v-model="form.postalCode" type="text" id="postalcode" name="postalcode" required></FormInput>
         </label>
 
         <label for="province">
           <div class="font-bold">PROVINCIA</div>
-          <FormInput v-model="form.province" type="text" id="province" name="province"></FormInput>
+          <FormInput v-model="form.province" type="text" id="province" name="province" required></FormInput>
         </label>
 
         <label for="country">
           <div class="font-bold">PAÍS</div>
-          <FormInput v-model="form.country" type="text" id="country" name="country"></FormInput>
+          <FormInput v-model="form.country" type="text" id="country" name="country" required></FormInput>
         </label>
       </div>
 
@@ -183,7 +209,7 @@ const buildingType = [
       <textarea v-model="form.comment" id="comment" name="comment" placeholder="Escriba aquí..." class="bg-white/30 backdrop-blur-lg rounded-lg text-center w-full"></textarea>
       </label>
 
-      <br>
+      <br><br>
 
       <div>
         <p class="font-bold">GÉNERO</p>
@@ -197,6 +223,13 @@ const buildingType = [
       <div>
         <p class="font-bold">¿Desea recibir información, cursos y ofertas mediante correo?</p>
         <input type="checkbox" v-model="form.subscribe" name="susbcribe"> De acuerdo
+      </div>
+
+      <br>
+
+      <div>
+        <p class="font-bold">¿Eres un robot?</p>
+        <input type="checkbox" @change="captchaValidation" v-model="form.captcha" name="captcha"> Validar
       </div>
 
       <br>
