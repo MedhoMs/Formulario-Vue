@@ -26,6 +26,28 @@ const form = ref({
   button: ""
 });
 
+const resetForm = () =>{
+  form.value= {
+    name: "",
+    surname: "",
+    user: "",
+    email: "",
+    password: "",
+    birthday: "",
+    street: "",
+    buildingType: "",
+    doorNumber: "",
+    postalCode: "",
+    province: "",
+    country: "",
+    studyLevel: "",
+    gender: "",
+    subscribe: false,
+    comment: "",
+    button: ""
+  };
+};
+
 const studyLevel = [
   {
     value: "",
@@ -181,7 +203,7 @@ const buildingType = [
 
       <div class="inline-flex rounded-md shadow-xs" role="group:b">
         <ButtonInput type="submit" class="rounded-s-lg hover:bg-blue-900">ENVIAR</ButtonInput>
-        <ButtonInput type="reset" class="rounded-e-lg hover:bg-red-900">LIMPIAR</ButtonInput>
+        <ButtonInput @click="resetForm" type="reset" class="rounded-e-lg hover:bg-red-900">LIMPIAR</ButtonInput>
       </div>
     </form>
   </div>
