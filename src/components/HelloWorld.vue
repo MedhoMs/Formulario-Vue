@@ -5,6 +5,8 @@ import FormSelect from './FormSelect.vue';
 import ButtonInput from './ButtonInput.vue';
 import FormRadioInput from './FormRadioInput.vue';
 import FormDatalist from './FormDatalist.vue';
+import { useMouse } from '@vueuse/core';
+import { useStepper } from '@vueuse/core'
 
 const form = ref({
   name: "",
@@ -49,6 +51,8 @@ const resetForm = () => {
     button: ""
   };
 };
+
+const { x, y } = useMouse()
 
 const activeCheckbox = ref (false)
 
@@ -144,6 +148,7 @@ const buildingType = [
 
 <template>
   <div class="grid place-items-center dark:text-white bg-gradient-to-b from-black via-[#2f005e] to-black my-7">
+    <h1>Poscion del cursor: {{ x }}, {{ y }}</h1>
     <form @submit="submitValidation" autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
       <div v-if="currentSection === 'personalInfo'">
         <div class="grid gap-6 mb-6 md:grid-cols-2">
