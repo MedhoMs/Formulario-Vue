@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import FormInput from './FormInput.vue';
 import FormSelect from './FormSelect.vue';
 import ButtonInput from './ButtonInput.vue';
@@ -52,9 +52,7 @@ const resetForm = () => {
 
 const activeCheckbox = ref (false)
 
-const sections = ref({
-  current: "personalInfo"
-})
+const currentSection = ref("personalInfo")
 
 
 const captchaValidation = () => {
@@ -76,6 +74,23 @@ const submitValidation = (event) => {
   if (!form.value.captcha) { 
     event.preventDefault(); 
     alert("Debes validar que no eres un robot antes de enviar el formulario.");
+  }
+};
+
+
+const totalSteps = 1;
+const currentStep = ref(0); 
+
+const progress = computed(() => {
+  return (currentStep.value / totalSteps) * 100;
+});
+
+const nextStep = () => {
+  if (currentStep.value < totalSteps) {
+    currentStep.value += 1;
+    if (currentStep.value === 1) {
+      currentSection.value = 'address';
+    }
   }
 };
 
@@ -130,7 +145,7 @@ const buildingType = [
 <template>
   <div class="grid place-items-center dark:text-white bg-gradient-to-b from-black via-[#2f005e] to-black my-7">
     <form @submit="submitValidation" autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
-      <div v-if="sections.current === 'personalInfo'">
+      <div v-if="currentSection === 'personalInfo'">
         <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="name">
           <div class="font-bold">NOMBRE</div>
@@ -164,11 +179,11 @@ const buildingType = [
 
         
       </div>
-        <ButtonInput :disabled = "!(form.name && form.surname && form.user && form.email && form.password)" @click="sections.current = 'address'" class="rounded-xl w-full">Siguiente</ButtonInput>
+        <ButtonInput :disabled = "!(form.name && form.surname && form.user && form.email && form.password)" @click="nextStep" class="rounded-xl w-full">Siguiente</ButtonInput>
+        <br><br>
       </div>
 
-
-      <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="sections.current === 'address'">
+      <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="currentSection === 'address'">
         <label for="street">
           <div class="font-bold">CALLE</div>
           <FormInput v-model="form.street" type="text" id="street" name="street" required></FormInput>
@@ -199,6 +214,10 @@ const buildingType = [
           <div class="font-bold">PAÍS</div>
           <FormInput v-model="form.country" type="text" id="country" name="country" required></FormInput>
         </label>
+      </div>
+
+      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+        <div class="bg-blue-600 h-2.5 rounded-full" :style="{ width: progress + '%' }"></div>
       </div>
 
       <br>
