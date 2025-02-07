@@ -5,7 +5,6 @@ import FormSelect from './FormSelect.vue';
 import ButtonInput from './ButtonInput.vue';
 import FormRadioInput from './FormRadioInput.vue';
 import FormDatalist from './FormDatalist.vue';
-import { useMouse } from '@vueuse/core';
 import { useStepper } from '@vueuse/core'
 
 const form = ref({
@@ -50,52 +49,6 @@ const resetForm = () => {
     comment: "",
     button: ""
   };
-};
-
-const { x, y } = useMouse()
-
-const activeCheckbox = ref (false)
-
-const currentSection = ref("personalInfo")
-
-
-const captchaValidation = () => {
-  const captchaNumber1 = ref(5);
-  const captchaNumber2 = ref(3);
-
-  const userSum = parseInt(prompt(`Tengo mis sospechas... ¿Cuánto es ${captchaNumber1.value} + ${captchaNumber2.value}?`));
-
-  if (userSum === captchaNumber1.value + captchaNumber2.value) {
-    form.value.captcha = true
-  } else {
-    form.value.captcha = false;
-    alert("Validación fallida, vuelva a intentar.")
-  }
-    
-}
-
-const submitValidation = (event) => {
-  if (!form.value.captcha) { 
-    event.preventDefault(); 
-    alert("Debes validar que no eres un robot antes de enviar el formulario.");
-  }
-};
-
-
-const totalSteps = 1;
-const currentStep = ref(0); 
-
-const progress = computed(() => {
-  return (currentStep.value / totalSteps) * 100;
-});
-
-const nextStep = () => {
-  if (currentStep.value < totalSteps) {
-    currentStep.value += 1;
-    if (currentStep.value === 1) {
-      currentSection.value = 'address';
-    }
-  }
 };
 
 const studyLevel = [
@@ -144,13 +97,70 @@ const buildingType = [
     value: "Oficina",
   },
 ]
+
+
+const activeCheckbox = ref (false)
+
+//The current section in the form
+const currentSection = ref("personalInfo")
+
+//Captcha validition logic
+const captchaValidation = () => {
+  const captchaNumber1 = ref(5);
+  const captchaNumber2 = ref(3);
+
+  const userSum = parseInt(prompt(`Tengo mis sospechas... ¿Cuánto es ${captchaNumber1.value} + ${captchaNumber2.value}?`));
+
+  if (userSum === captchaNumber1.value + captchaNumber2.value) {
+    form.value.captcha = true
+  } else {
+    form.value.captcha = false;
+    alert("Validación fallida, vuelva a intentar.")
+  }
+    
+}
+
+//Submit validtion to prevent send the form without checking the Captcha
+const submitValidation = (event) => {
+  if (!form.value.captcha) { 
+    event.preventDefault(); 
+    alert("Debes validar que no eres un robot antes de enviar el formulario.");
+  }
+};
+
+//Stepper buttons logic
+const stepper = useStepper({
+  'user-information': {
+    title: 'Info Personal',
+    isValid: () => form.value.name &&
+     form.value.surname &&
+     form.value.user &&
+     form.value.email &&
+     form.value.password,
+  },
+  'address-information': {
+    title: 'Dirección',
+    isValid: () => form.street?.trim() !== '',
+  },
+})
+
+function submit() {
+  if (stepper.current.value.isValid())
+    stepper.goToNext()
+}
+
+function allStepsBeforeAreValid(index) {
+  return !Array.from({ length: index }, () => null)
+    .some((_, i) => !stepper.at(i)?.isValid())
+}
 </script>
 
 <template>
   <div class="grid place-items-center dark:text-white bg-gradient-to-b from-black via-[#2f005e] to-black my-7">
-    <h1>Poscion del cursor: {{ x }}, {{ y }}</h1>
     <form @submit="submitValidation" autocomplete="off" class="rounded-xl text-center bg-black/35 backdrop-blur-xl p-10 place-items-center">
-      <div v-if="currentSection === 'personalInfo'">
+
+      <!--PERSONAL INFO SECTION-->
+      <div v-if="stepper.isCurrent('user-information')">
         <div class="grid gap-6 mb-6 md:grid-cols-2">
         <label for="name">
           <div class="font-bold">NOMBRE</div>
@@ -181,14 +191,12 @@ const buildingType = [
           <div class="font-bold">FECHA DE NACIMIENTO</div>
           <FormInput v-model="form.birthday" type="date" id="birthday" name="birthday" class="w-full text-center"></FormInput>
         </label>
-
-        
-      </div>
-        <ButtonInput :disabled = "!(form.name && form.surname && form.user && form.email && form.password)" @click="nextStep" class="rounded-xl w-full">Siguiente</ButtonInput>
-        <br><br>
+        </div>
       </div>
 
-      <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="currentSection === 'address'">
+      <!--ADDRESS SECTION-->
+
+      <div class="grid gap-6 mb-6 md:grid-cols-2" v-if="stepper.isCurrent('address-information')">
         <label for="street">
           <div class="font-bold">CALLE</div>
           <FormInput v-model="form.street" type="text" id="street" name="street" required></FormInput>
@@ -221,11 +229,20 @@ const buildingType = [
         </label>
       </div>
 
-      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-        <div class="bg-blue-600 h-2.5 rounded-full" :style="{ width: progress + '%' }"></div>
+      <!--BUTTONS AND PROGRESS BAR-->
+      <div class="flex gap-2 justify-center">
+        <div v-for="(step, id, i) in stepper.steps.value" :key="id" class="">
+          <ButtonInput type="button"
+            :disabled="!allStepsBeforeAreValid(i) && stepper.isBefore(id)"
+            @click="stepper.goTo(id)"
+            v-text="step.title" class="rounded-xl"
+          />
+        </div>
       </div>
 
       <br>
+
+      <!--FINAL SECTION-->
 
       <div>
         <label for="study-level">
